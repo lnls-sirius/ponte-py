@@ -98,9 +98,11 @@ def queue_processing_thread():
 
         # Lê a resposta da interface serial
         answer = PRUserial485_read()
-        answer = "".join(answer)
+
+        if PYTHON_VERSION == 2:
+            answer = "".join(answer)
         if PYTHON_VERSION == 3:
-            answer = answer.encode()
+            answer = bytearray([ord(c) for c in answer])
 
         # Envia a resposta ao cliente
 
