@@ -1,39 +1,39 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-
 """
-
-
 Ponte.py
 Programa que provê acesso à interface serial RS-485 baseada na PRU através de um socket TCP/IP.
 
 Autor: Eduardo Pereira Coelho
 
-
 Histórico de versões:
-
+31/10/2018 - Suporte para python3 (python-sirius)
 20/06/2017 - Código reestruturado. Adicionado suporte para mais de um cliente simultaneamente.
-
 24/05/2017 - Versão inicial.
-
-
 """
 
 # Módulos necessários
 
 from PRUserial485 import *
-from Queue import Queue
+#from Queue import Queue
 import socket
 import threading
 import time
 import sys
 
+PYTHON_VERSION = sys.version_info.major
+
+if PYTHON_VERSION == 2:
+    from Queue import Queue
+elif PYTHON_VERSION == 3:
+    from queue import Queue
+
 # Porta TCP para escutar conexões de clientes
 
 SERVER_PORT = 4000
 
-# Fila com as operações a serem realizadas 
+# Fila com as operações a serem realizadas
 
 queue = Queue()
 
@@ -72,7 +72,12 @@ def queue_processing_thread():
 
     # Inicialização da interface PRUserial485 (como mestre serial a 6 Mbps)
 
-    PRUserial485_open(6, "M")
+    if PYTHON_VERSION == 2:
+        mode = "M"
+    elif PYTHON_VERSION == 3:
+        mode = b"M"
+
+    PRUserial485_open(6, mode)
     PRUserial485_sync_stop()
 
     while (True):
@@ -84,15 +89,22 @@ def queue_processing_thread():
         # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
         # resposta de 2 s.
 
-        PRUserial485_write(list(item[1]), 2000.0)
+        if PYTHON_VERSION == 2:
+            message = list(item[1])
+        elif PYTHON_VERSION == 3:
+            message = [chr(value) for value in item[1]]
+
+        PRUserial485_write(message, 2000.0)
 
         # Lê a resposta da interface serial
-
         answer = PRUserial485_read()
+        answer = "".join(answer)
+        if PYTHON_VERSION == 3:
+            answer = answer.encode()
 
         # Envia a resposta ao cliente
 
-        item[0].sendall("".join(answer))
+        item[0].sendall(answer)
 
 # Procedimento principal
 
@@ -131,4 +143,4 @@ if (__name__ == "__main__"):
 
         new_thread = threading.Thread(target = client_thread, args = (connection, address))
         new_thread.setDaemon(True)
-        new_thread.start()    
+        new_thread.start()
