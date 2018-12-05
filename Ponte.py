@@ -5,9 +5,10 @@
 Ponte.py
 Programa que provê acesso à interface serial RS-485 baseada na PRU através de um socket TCP/IP.
 
-Autor: Eduardo Pereira Coelho
+Autores : Eduardo Pereira Coelho / Patricia Nallin
 
 Histórico de versões:
+05/12/2018 - Execução em paralelo com IOC das fontes do Sirius (sirius-ioc-as-ps.py). Permissao para acesso a porta serial por PVs.
 31/10/2018 - Suporte para python3 (python-sirius)
 20/06/2017 - Código reestruturado. Adicionado suporte para mais de um cliente simultaneamente.
 24/05/2017 - Versão inicial.
@@ -16,11 +17,13 @@ Histórico de versões:
 # Módulos necessários
 
 from PRUserial485 import *
-#from Queue import Queue
+from siriuspy.search import PSSearch
+from epics import caget
 import socket
 import threading
 import time
 import sys
+import subprocess
 
 PYTHON_VERSION = sys.version_info.major
 
@@ -41,6 +44,38 @@ queue = Queue()
 
 def time_string():
     return(time.strftime("%d/%m/%Y, %H:%M:%S - ", time.localtime()))
+
+
+# Verifica se um determinado processo esta rodando e retorna uma lista com os PIDs encontrados
+
+def process_id(proc):
+    ps = subprocess.Popen("ps -eaf", shell=True, stdout=subprocess.PIPE)
+    output = ps.stdout.read().decode()
+    ps.stdout.close()
+    ps.wait()
+    pids = []
+    for line in output.split("\n"):
+        if line != "" and line != None:
+            if proc in line:
+                pids.append(line.split()[1])
+    return pids
+
+
+# Verifica se IOC está rodando e para qual aplicação as PVs de controle de porta serial apontam
+
+def control_PRUserial485():
+    # Master: quem controla a porta serial
+    master = "Ponte-py"
+    # IOC rodando?
+    if (process_id("sirius-ioc-as-ps.py") != []):
+        # Verifica status de PVs de controle
+        bbbname = socket.gethostname().replace('--', ':')
+        bsmp_devs = PSSearch.conv_bbbname_2_psnames(bbbname)
+        psnames, bsmp_ids = zip(*bsmp_devs)
+        # Se BSMPComm == 1, interface serial esta desbloqueada para o IOC
+        if (any(caget(psname + ':BSMPComm-Sts') == 1 for psname in psnames)):
+            master = "PS_IOC"
+    return master
 
 # Procedimento que escuta requisições de um determinado cliente
 
@@ -86,18 +121,27 @@ def queue_processing_thread():
 
         item = queue.get(block = True)
 
-        # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
-        # resposta de 2 s.
+        # Checa se o controle da inteface está com o IOC. Só continua caso a permissão
+        # esteja para Ponte-py
+        if (control_PRUserial485() == "Ponte-py"):
 
-        if PYTHON_VERSION == 2:
-            message = list(item[1])
-        elif PYTHON_VERSION == 3:
-            message = [chr(value) for value in item[1]]
+            # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
+            # resposta de 2 s.
+            if PYTHON_VERSION == 2:
+                message = list(item[1])
+            elif PYTHON_VERSION == 3:
+                message = [chr(value) for value in item[1]]
 
-        PRUserial485_write(message, 2000.0)
+            PRUserial485_write(message, 2000.0)
 
-        # Lê a resposta da interface serial
-        answer = PRUserial485_read()
+            # Lê a resposta da interface serial
+            answer = PRUserial485_read()
+
+        else:
+            answer = "SERIAL INTERFACE BLOCKED FOR IOCS"
+
+
+        # Formata resposta
 
         if PYTHON_VERSION == 2:
             answer = "".join(answer)
