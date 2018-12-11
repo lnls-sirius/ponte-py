@@ -17,13 +17,12 @@ Histórico de versões:
 # Módulos necessários
 
 from PRUserial485 import *
-from siriuspy.search import PSSearch
 from epics import caget
-import socket
-import threading
-import time
-import sys
-import subprocess
+import socket, threading
+import time, sys
+import subprocess, importlib
+if importlib.find_loader('siriuspy'):
+    from siriuspy.search import PSSearch
 
 PYTHON_VERSION = sys.version_info.major
 
