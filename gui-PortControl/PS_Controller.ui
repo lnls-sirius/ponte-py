@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>700</width>
+    <height>38</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>700</width>
+    <height>32</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>16777215</width>
+    <height>38</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>5</number>
+     </property>
+     <property name="horizontalSpacing">
+      <number>10</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>5</number>
+     </property>
+     <item row="0" column="7">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_4">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS7}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_9">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS3}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="11">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>TBD</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="6">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_5">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS6}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_10">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS2}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="10">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_3">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS10}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="12">
+      <widget class="PyDMShellCommand" name="PyDMShellCommand">
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    A QPushButton capable of execute shell commands.
+    </string>
+       </property>
+       <property name="text">
+        <string>Toggle</string>
+       </property>
+       <property name="command" stdset="0">
+        <string>python3 ponte.py ${PS_CON}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Arial</family>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="mouseTracking">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>${PS_CON}</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="9">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_2">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS9}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_7">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS4}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_8">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS5}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator_6">
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="statusTip">
+        <string extracomment="{PS1}"/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="accessibleName">
+        <string extracomment="${PS1}"/>
+       </property>
+       <property name="channel" stdset="0">
+        <string extracomment="${PS1}">ca://${PS1}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="labels" stdset="0">
+        <stringlist extracomment="${PS1}:BSMPComm-Sts">
+         <string>Bit 0</string>
+        </stringlist>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="8">
+      <widget class="PyDMByteIndicator" name="PyDMByteIndicator">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string/>
+       </property>
+       <property name="whatsThis">
+        <string>
+    Widget for graphical representation of bits from an integer number
+    with support for Channels and more from PyDM
+
+    Parameters
+    ----------
+    parent : QWidget
+        The parent widget for the Label
+    init_channel : str, optional
+        The channel to be used by the widget.
+    </string>
+       </property>
+       <property name="alarmSensitiveBorder" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="precisionFromPV" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="channel" stdset="0">
+        <string>ca://${PS8}:BSMPComm-Sts</string>
+       </property>
+       <property name="onColor" stdset="0">
+        <color>
+         <red>52</red>
+         <green>101</green>
+         <blue>164</blue>
+        </color>
+       </property>
+       <property name="offColor" stdset="0">
+        <color>
+         <red>193</red>
+         <green>125</green>
+         <blue>17</blue>
+        </color>
+       </property>
+       <property name="orientation" stdset="0">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="showLabels" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="circles" stdset="0">
+        <bool>false</bool>
+       </property>
+       <property name="labelPosition" stdset="0">
+        <enum>QTabWidget::East</enum>
+       </property>
+       <property name="labels" stdset="0">
+        <stringlist>
+         <string></string>
+        </stringlist>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PyDMByteIndicator</class>
+   <extends>QWidget</extends>
+   <header>pydm.widgets.byte</header>
+  </customwidget>
+  <customwidget>
+   <class>PyDMShellCommand</class>
+   <extends>QPushButton</extends>
+   <header>pydm.widgets.shell_command</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
