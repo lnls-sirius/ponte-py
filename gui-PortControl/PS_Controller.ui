@@ -342,7 +342,7 @@
         <string>Toggle</string>
        </property>
        <property name="command" stdset="0">
-        <string>python3 ponte.py ${PS_CON}</string>
+        <string>${PYTHON} ponte.py ${PS_CON}</string>
        </property>
       </widget>
      </item>
