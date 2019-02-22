@@ -1,0 +1,1 @@
+pydm.exe --hide-status-bar --hide-menu-bar --hide-nav-bar RS485-serial-controller-interface.py    
