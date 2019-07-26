@@ -1,5 +1,5 @@
 import os, json
-
+import platform
 from pydm import Display, PyDMApplication
 from pydm.utilities import IconFont
 from pydm.widgets import PyDMRelatedDisplayButton, PyDMEmbeddedDisplay, PyDMLabel, PyDMByteIndicator
@@ -243,7 +243,7 @@ class AllPSDisplay(Display):
                 continue
 
             # Create macros list
-            dict_macro_BBB = {"PS_CON":entry}
+            dict_macro_BBB = {"PS_CON" : entry, "PYTHON": "python" if platform.system() == "Windows" else "python3"}
             for i in range(1, len(self.BBB_PS_list[entry])+1):
                 dict_macro_BBB["PS{}".format(i)] = self.BBB_PS_list[entry][i-1]
             # Create a PyDMEmbeddedDisplay for this entry
