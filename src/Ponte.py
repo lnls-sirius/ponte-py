@@ -8,6 +8,7 @@ Programa que provê acesso à interface serial RS-485 baseada na PRU através de
 Autores : Eduardo Pereira Coelho / Patricia Nallin
 
 Histórico de versões:
+26/07/2019 - Adicionado suporte para execução em paralelo com o IOC remoto (eth-bridge-pru-serial485)
 05/12/2018 - Execução em paralelo com IOC das fontes do Sirius (sirius-ioc-as-ps.py). Permissao para acesso a porta serial por PVs.
 31/10/2018 - Suporte para python3 (python-sirius)
 20/06/2017 - Código reestruturado. Adicionado suporte para mais de um cliente simultaneamente.
@@ -46,7 +47,6 @@ def time_string():
 
 
 # Verifica se um determinado processo esta rodando e retorna uma lista com os PIDs encontrados
-
 def process_id(proc):
     ps = subprocess.Popen("ps -eaf", shell=True, stdout=subprocess.PIPE)
     output = ps.stdout.read().decode()
@@ -59,14 +59,28 @@ def process_id(proc):
                 pids.append(line.split()[1])
     return pids
 
+# Verifica se há conexão estabelecida em determinada(s) porta(s) ethernet.
+def remote_ioc_connected(ports = []):
+    ports_connected = []
+    for port in ports:
+        ps = subprocess.Popen("netstat -pant | grep ':{}'".format(port), shell=True, stdout=subprocess.PIPE)
+        output = ps.stdout.read().decode()
+        ps.stdout.close()
+        ps.wait()
+        if "ESTABLISHED" in output:
+            ports_connected.append(port)
+    if ports_connected == []:
+        return False
+    else:
+        return True
+
 
 # Verifica se IOC está rodando e para qual aplicação as PVs de controle de porta serial apontam
-
 def control_PRUserial485():
     # Master: quem controla a porta serial
     master = "Ponte-py"
     # IOC rodando?
-    if (process_id("sirius-ioc-as-ps.py") != []):
+    if (process_id("sirius-ioc-as-ps.py") != [] or remote_ioc_connected(ports = [5000,6000])):
         # Verifica status de PVs de controle
         bbbname = socket.gethostname().replace('--', ':')
         bsmp_devs = PSSearch.conv_bbbname_2_psnames(bbbname)
