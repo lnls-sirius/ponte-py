@@ -8,6 +8,7 @@ Programa que provê acesso à interface serial RS-485 baseada na PRU através de
 Autores : Eduardo Pereira Coelho / Patricia Nallin
 
 Histórico de versões:
+04/02/2020 - Compatibilidade com biblioteca PRUserial485 versao > 1.4.0
 26/07/2019 - Adicionado suporte para execução em paralelo com o IOC remoto (eth-bridge-pru-serial485)
 05/12/2018 - Execução em paralelo com IOC das fontes do Sirius (sirius-ioc-as-ps.py). Permissao para acesso a porta serial por PVs.
 31/10/2018 - Suporte para python3 (python-sirius)
@@ -143,23 +144,22 @@ def queue_processing_thread():
             if PYTHON_VERSION == 2:
                 message = list(item[1])
             elif PYTHON_VERSION == 3:
-                message = [chr(value) for value in item[1]]
+                message = item[1]
 
             PRUserial485_write(message, 2000.0)
 
             # Lê a resposta da interface serial
             answer = PRUserial485_read()
-
+            answer=b'lalala'
         else:
             answer = "SERIAL INTERFACE BLOCKED FOR IOCS"
-
+            if PYTHON_VERSION == 3:
+                answer = answer.encode()
 
         # Formata resposta
 
         if PYTHON_VERSION == 2:
             answer = "".join(answer)
-        if PYTHON_VERSION == 3:
-            answer = bytearray([ord(c) for c in answer])
 
         # Envia a resposta ao cliente
 
