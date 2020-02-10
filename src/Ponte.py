@@ -150,7 +150,6 @@ def queue_processing_thread():
 
             # Lê a resposta da interface serial
             answer = PRUserial485_read()
-            answer=b'lalala'
         else:
             answer = "SERIAL INTERFACE BLOCKED FOR IOCS"
             if PYTHON_VERSION == 3:
