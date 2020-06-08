@@ -8,6 +8,7 @@ Programa que provê acesso à interface serial RS-485 baseada na PRU através de
 Autores : Eduardo Pereira Coelho / Patricia Nallin
 
 Histórico de versões:
+08/06/2020 - Ponte-py conecta ao eth-bridge-pru-serial485 para rodar em paralelo com IOC sem maiores confi$
 26/07/2019 - Adicionado suporte para execução em paralelo com o IOC remoto (eth-bridge-pru-serial485)
 05/12/2018 - Execução em paralelo com IOC das fontes do Sirius (sirius-ioc-as-ps.py). Permissao para acesso a porta serial por PVs.
 31/10/2018 - Suporte para python3 (python-sirius)
