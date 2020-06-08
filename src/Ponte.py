@@ -8,7 +8,6 @@ Programa que provê acesso à interface serial RS-485 baseada na PRU através de
 Autores : Eduardo Pereira Coelho / Patricia Nallin
 
 Histórico de versões:
-04/02/2020 - Compatibilidade com biblioteca PRUserial485 versao > 1.4.0
 26/07/2019 - Adicionado suporte para execução em paralelo com o IOC remoto (eth-bridge-pru-serial485)
 05/12/2018 - Execução em paralelo com IOC das fontes do Sirius (sirius-ioc-as-ps.py). Permissao para acesso a porta serial por PVs.
 31/10/2018 - Suporte para python3 (python-sirius)
@@ -23,15 +22,9 @@ from epics import caget
 import socket, threading
 import time, sys
 import subprocess, importlib
-if importlib.find_loader('siriuspy'):
-    from siriuspy.search import PSSearch
+from Queue import Queue
+import struct
 
-PYTHON_VERSION = sys.version_info.major
-
-if PYTHON_VERSION == 2:
-    from Queue import Queue
-elif PYTHON_VERSION == 3:
-    from queue import Queue
 
 # Porta TCP para escutar conexões de clientes
 
@@ -41,12 +34,18 @@ SERVER_PORT = 4000
 
 queue = Queue()
 
+# Funcoes eth-bridge
+COMMAND_PRUserial485_write = b'\x03'
+COMMAND_PRUserial485_read = b'\x04'
+
+
+
 # Função que retorna uma estampa de tempo (usada pelas mensagens de log)
 
 def time_string():
     return(time.strftime("%d/%m/%Y, %H:%M:%S - ", time.localtime()))
 
-
+'''
 # Verifica se um determinado processo esta rodando e retorna uma lista com os PIDs encontrados
 def process_id(proc):
     ps = subprocess.Popen("ps -eaf", shell=True, stdout=subprocess.PIPE)
@@ -90,6 +89,7 @@ def control_PRUserial485():
         if (any(caget(psname + ':BSMPComm-Sts') == 1 for psname in psnames)):
             master = "PS_IOC"
     return master
+'''
 
 # Procedimento que escuta requisições de um determinado cliente
 
@@ -108,61 +108,78 @@ def client_thread(client_connection, client_address):
             queue.put([client_connection, data])
 
         else:
-
             # Caso contrário, registra a desconexão do cliente
-
             sys.stdout.write(time_string() + "Cliente " + client_address[0] + " desconectado.\n")
             sys.stdout.flush()
             break
+
+def payload_length(payload):
+    """."""
+    return(struct.pack("B", payload[0]) +
+           struct.pack(">I", (len(payload)-1)) + payload[1:])
+
+
 
 # Thread que processa a fila de operações a serem realizadas através da interface serial
 
 def queue_processing_thread():
 
-    # Inicialização da interface PRUserial485 (como mestre serial a 6 Mbps)
+    while True:
 
-    if PYTHON_VERSION == 2:
-        mode = "M"
-    elif PYTHON_VERSION == 3:
-        mode = b"M"
+        socket_eth_bridge = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        socket_eth_bridge.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        socket_eth_bridge.connect(('127.0.0.1', 5000))
+        socket_eth_bridge.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
 
-    PRUserial485_open(6, mode)
-    PRUserial485_sync_stop()
-
-    while (True):
-
-        # Retira a próxima operação da fila
-
-        item = queue.get(block = True)
-
-        # Checa se o controle da inteface está com o IOC. Só continua caso a permissão
-        # esteja para Ponte-py
-        if (control_PRUserial485() == "Ponte-py"):
-
-            # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
-            # resposta de 2 s.
-            if PYTHON_VERSION == 2:
-                message = list(item[1])
-            elif PYTHON_VERSION == 3:
+        while (True):
+            try:
+                # Retira a próxima operação da fila PONTE-PY
+                item = queue.get(block = True)
+                
+                # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
+                # resposta de 2 s.
                 message = item[1]
 
-            PRUserial485_write(message, 2000.0)
+                sending_data = COMMAND_PRUserial485_write + struct.pack(">f", 2000.0)
+                sending_data += bytearray([ord(i) for i in message])
+                socket_eth_bridge.sendall(payload_length(sending_data))
 
-            # Lê a resposta da interface serial
-            answer = PRUserial485_read()
-        else:
-            answer = "SERIAL INTERFACE BLOCKED FOR IOCS"
-            if PYTHON_VERSION == 3:
-                answer = answer.encode()
+                try:
+                    answer = socket_eth_bridge.recv(6)
+                except ConnectionResetError:
+                    answer = []
 
-        # Formata resposta
+                # Receive data/payload
+                payload = b''
+                if answer:
+                    answer = []
+                    socket_eth_bridge.sendall(COMMAND_PRUserial485_read + b'\x00\x00\x00\x00')
+                    try:
+                        answer = socket_eth_bridge.recv(5)
+                    except ConnectionResetError:
+                        pass
 
-        if PYTHON_VERSION == 2:
-            answer = "".join(answer)
+                    if answer:
+                        command_recv = answer[0]
+                        data_size = struct.unpack(">I", answer[1:])[0]
+                    else:
+                        command_recv = b''
+                        data_size = 0
 
-        # Envia a resposta ao cliente
+                    if data_size:
+                        try:
+                            for _ in range(int(data_size / 4096)):
+                                payload += socket_eth_bridge.recv(4096, socket.MSG_WAITALL)
+                            payload += socket_eth_bridge.recv(
+                                int(data_size % 4096), socket.MSG_WAITALL)
+                        except ConnectionResetError:
+                            payload = b''
+                        
+                # Envia a resposta ao cliente PONTE-PY
+                item[0].sendall(payload)
 
-        item[0].sendall(answer)
+            except:
+                pass
 
 # Procedimento principal
 
@@ -171,6 +188,7 @@ if (__name__ == "__main__"):
     # Cria o socket para o servidor TCP/IP
 
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind(("", SERVER_PORT))
     server_socket.listen(5)
 
