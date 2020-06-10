@@ -23,7 +23,7 @@ from epics import caget
 import socket, threading
 import time, sys
 import subprocess, importlib
-from Queue import Queue
+from queue import Queue
 import struct
 
 
