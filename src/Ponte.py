@@ -126,61 +126,63 @@ def payload_length(payload):
 def queue_processing_thread():
 
     while True:
+        try:
+            socket_eth_bridge = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            socket_eth_bridge.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            socket_eth_bridge.connect(('127.0.0.1', 5000))
+            socket_eth_bridge.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
+            remote_socket_connected = True
 
-        socket_eth_bridge = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        socket_eth_bridge.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        socket_eth_bridge.connect(('127.0.0.1', 5000))
-        socket_eth_bridge.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
-
-        while (True):
-            try:
-                # Retira a próxima operação da fila PONTE-PY
-                item = queue.get(block = True)
+            while (remote_socket_connected):
                 
-                # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
-                # resposta de 2 s.
-                message = item[1]
+                    # Retira a próxima operação da fila PONTE-PY
+                    item = queue.get(block = True)
+                    
+                    # Envia requisição do cliente através da interface serial PRUserial485, com timeout de
+                    # resposta de 2 s.
+                    message = item[1]
 
-                sending_data = COMMAND_PRUserial485_write + struct.pack(">f", 2000.0)
-                sending_data += bytearray([ord(i) for i in message])
-                socket_eth_bridge.sendall(payload_length(sending_data))
+                    sending_data = COMMAND_PRUserial485_write + struct.pack(">f", 2000.0)
+                    sending_data += bytearray([ord(i) for i in message])
+                    socket_eth_bridge.sendall(payload_length(sending_data))
 
-                try:
-                    answer = socket_eth_bridge.recv(6)
-                except ConnectionResetError:
-                    answer = []
-
-                # Receive data/payload
-                payload = b''
-                if answer:
-                    answer = []
-                    socket_eth_bridge.sendall(COMMAND_PRUserial485_read + b'\x00\x00\x00\x00')
                     try:
-                        answer = socket_eth_bridge.recv(5)
-                    except ConnectionResetError:
-                        pass
+                        answer = socket_eth_bridge.recv(6)
+                    except:
+                        remote_socket_connected = False
+                        answer = []
 
+                    # Receive data/payload
+                    payload = b''
                     if answer:
-                        command_recv = answer[0]
-                        data_size = struct.unpack(">I", answer[1:])[0]
-                    else:
-                        command_recv = b''
-                        data_size = 0
-
-                    if data_size:
+                        answer = []
+                        socket_eth_bridge.sendall(COMMAND_PRUserial485_read + b'\x00\x00\x00\x00')
                         try:
-                            for _ in range(int(data_size / 4096)):
-                                payload += socket_eth_bridge.recv(4096, socket.MSG_WAITALL)
-                            payload += socket_eth_bridge.recv(
-                                int(data_size % 4096), socket.MSG_WAITALL)
-                        except ConnectionResetError:
-                            payload = b''
-                        
-                # Envia a resposta ao cliente PONTE-PY
-                item[0].sendall(payload)
+                            answer = socket_eth_bridge.recv(5)
+                        except:
+                            remote_socket_connected = False
 
-            except:
-                pass
+                        if answer:
+                            command_recv = answer[0]
+                            data_size = struct.unpack(">I", answer[1:])[0]
+                        else:
+                            command_recv = b''
+                            data_size = 0
+
+                        if data_size:
+                            try:
+                                for _ in range(int(data_size / 4096)):
+                                    payload += socket_eth_bridge.recv(4096, socket.MSG_WAITALL)
+                                payload += socket_eth_bridge.recv(
+                                    int(data_size % 4096), socket.MSG_WAITALL)
+                            except:
+                                remote_socket_connected = False
+                                payload = b''
+                            
+                    # Envia a resposta ao cliente PONTE-PY
+                    item[0].sendall(payload)
+        except:
+            time.sleep(1)
 
 # Procedimento principal
 
