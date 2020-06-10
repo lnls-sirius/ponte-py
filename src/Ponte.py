@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python-sirius
 # -*- coding: utf-8 -*-
 
 """
@@ -20,10 +20,12 @@ Histórico de versões:
 
 from PRUserial485 import *
 from epics import caget
-import socket, threading
-import time, sys
-import subprocess, importlib
-from Queue import Queue
+import socket
+import threading
+import time
+import sys
+import subprocess
+from queue import Queue
 import struct
 
 
@@ -143,7 +145,7 @@ def queue_processing_thread():
                     message = item[1]
 
                     sending_data = COMMAND_PRUserial485_write + struct.pack(">f", 2000.0)
-                    sending_data += bytearray([ord(i) for i in message])
+                    sending_data += message
                     socket_eth_bridge.sendall(payload_length(sending_data))
 
                     try:
